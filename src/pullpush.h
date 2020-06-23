@@ -18,8 +18,8 @@
  *
  * On success, this returns *@cursor before it was updated, otherwise NULL.
  */
-unsigned char *push_bytes(unsigned char **cursor, size_t *max,
-                          const void *src, size_t len);
+unsigned char *wally_push_bytes(unsigned char **cursor, size_t *max,
+                                const void *src, size_t len);
 
 /**
  * Safely copy @len bytes from @cursor into @dst.
@@ -30,62 +30,62 @@ unsigned char *push_bytes(unsigned char **cursor, size_t *max,
  * Otherwise, @len bytes will be copied from @cursor, *@max decreased
  * by @len and @cursor increased by @len.
  */
-void pull_bytes(void *dst, size_t len,
-                const unsigned char **cursor, size_t *max);
+void wally_pull_bytes(void *dst, size_t len,
+                      const unsigned char **cursor, size_t *max);
 
 
 /**
  * Return a pointer to (and skip over) some bytes.
  *
- * Returns NULL (and maybe calls pull_failed()) if there are not enough left.
+ * Returns NULL (and maybe calls wally_pull_failed()) if there are not enough left.
  */
-const unsigned char *pull_skip(const unsigned char **cursor, size_t *max,
-                               size_t len);
+const unsigned char *wally_pull_skip(const unsigned char **cursor, size_t *max,
+                                     size_t len);
 
 
 /**
- * Convenience function to indicate a pull failed (eg. type decode failed)
+ * Convenience function to indicate a wally_pull failed (eg. type decode failed)
  *
  * Sets *cursor to NULL, *max to 0.
  */
-void pull_failed(const unsigned char **cursor, size_t *max);
+void wally_pull_failed(const unsigned char **cursor, size_t *max);
 
 /**
  * Convenience functions.
  */
-void push_le64(unsigned char **cursor, size_t *max, uint64_t v);
-uint64_t pull_le64(const unsigned char **cursor, size_t *max);
-void push_le32(unsigned char **cursor, size_t *max, uint32_t v);
-uint32_t pull_le32(const unsigned char **cursor, size_t *max);
-void push_le16(unsigned char **cursor, size_t *max, uint16_t v);
-uint16_t pull_le16(const unsigned char **cursor, size_t *max);
-void push_u8(unsigned char **cursor, size_t *max, uint8_t v);
-uint8_t pull_u8(const unsigned char **cursor, size_t *max);
+void wally_push_le64(unsigned char **cursor, size_t *max, uint64_t v);
+uint64_t wally_pull_le64(const unsigned char **cursor, size_t *max);
+void wally_push_le32(unsigned char **cursor, size_t *max, uint32_t v);
+uint32_t wally_pull_le32(const unsigned char **cursor, size_t *max);
+void wally_push_le16(unsigned char **cursor, size_t *max, uint16_t v);
+uint16_t wally_pull_le16(const unsigned char **cursor, size_t *max);
+void wally_push_u8(unsigned char **cursor, size_t *max, uint8_t v);
+uint8_t wally_pull_u8(const unsigned char **cursor, size_t *max);
 
-void push_varint(unsigned char **cursor, size_t *max, uint64_t v);
-uint64_t pull_varint(const unsigned char **cursor, size_t *max);
+void wally_push_varint(unsigned char **cursor, size_t *max, uint64_t v);
+uint64_t wally_pull_varint(const unsigned char **cursor, size_t *max);
 
-void push_varbuff(unsigned char **cursor, size_t *max,
-                  const unsigned char *bytes, size_t bytes_len);
+void wally_push_varbuff(unsigned char **cursor, size_t *max,
+                        const unsigned char *bytes, size_t bytes_len);
 
-/* Calls pull_failed() (and returns 0) if length would exceed remaining *max */
-size_t pull_varlength(const unsigned char **cursor, size_t *max);
+/* Calls wally_pull_failed() (and returns 0) if length would exceed remaining *max */
+size_t wally_pull_varlength(const unsigned char **cursor, size_t *max);
 
 /**
  * Functions to parse a subfield within an area.
  *
- * pull_subfield_start: initializes subcursor/submax to subfield_len at
- * cursor.  These can then be used with pull_ methods like normal.
+ * wally_pull_subfield_start: initializes subcursor/submax to subfield_len at
+ * cursor.  These can then be used with wally_pull_ methods like normal.
  *
- * end_subfield_pull: updates *cursor and *max to point after the subfield has
- * been parsed.  If *subcursor is NULL, it's equivalent to pull_failed.
+ * end_subfield_wally_pull: updates *cursor and *max to point after the subfield has
+ * been parsed.  If *subcursor is NULL, it's equivalent to wally_pull_failed.
  */
-void pull_subfield_start(const unsigned char *const *cursor, const size_t *max,
-                         size_t subfield_len,
-                         const unsigned char **subcursor, size_t *submax);
+void wally_pull_subfield_start(const unsigned char *const *cursor, const size_t *max,
+                               size_t subfield_len,
+                               const unsigned char **subcursor, size_t *submax);
 
-void pull_subfield_end(const unsigned char **cursor, size_t *max,
-                       const unsigned char *subcursor,
-                       const size_t submax);
+void wally_pull_subfield_end(const unsigned char **cursor, size_t *max,
+                             const unsigned char *subcursor,
+                             const size_t submax);
 
 #endif /* LIBWALLY_CORE_PULLPUSH_H */

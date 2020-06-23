@@ -45,8 +45,13 @@ static unsigned char *cliff(size_t *size)
     *size = getpagesize();
 
     /* MAP_ANON isn't POSIX, but MacOS doesn't let us mmap /dev/zero */
+#if !defined(MAP_ANON)
+    p = mmap(NULL, *size + getpagesize(),
+             PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+#else
     p = mmap(NULL, *size + getpagesize(),
              PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+#endif
     if (p == MAP_FAILED)
         err(1, "Failed to mmap anon");
 
