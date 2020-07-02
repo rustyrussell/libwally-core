@@ -1983,7 +1983,7 @@ static int tx_to_bytes(const struct wally_tx *tx,
     if (written)
         *written = 0;
 
-    if (!is_valid_tx(tx) || !tx->num_inputs || !tx->num_outputs ||
+    if (!is_valid_tx(tx) || !tx->num_inputs ||
         (flags & ~WALLY_TX_FLAG_USE_WITNESS) || !bytes_out || !written ||
         tx_get_length(tx, opts, flags, &n, is_elements) != WALLY_OK)
         return WALLY_EINVAL;
