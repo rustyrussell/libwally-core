@@ -40,10 +40,18 @@ static const struct wally_operations test_ops = {
 static unsigned char *cliff(size_t *size)
 {
     unsigned char *p;
+    int anonflag;
 
     /* One page is enough for our tests so far */
     *size = getpagesize();
 
+#ifdef MAP_ANON
+    anonflag = MAP_ANON;
+#elif defined(MAP_ANONYMOUS)
+    anonflag = MAP_ANONYMOUS;
+#else
+#error This test needs MAP_ANON or mmap /dev/zero or something.  (Insert OS insult here)
+#endif
     /* MAP_ANON isn't POSIX, but MacOS doesn't let us mmap /dev/zero */
     p = mmap(NULL, *size + getpagesize(),
              PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
